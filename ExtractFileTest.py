@@ -1,5 +1,5 @@
 from cgi import test
-
+import math
 
 def printTests():
     print("this is a test")
@@ -12,3 +12,7 @@ printTests()
 a = 4 + 3
 print(a)
 print(9 - 3)
+print("The secret to water is water")
+a = 95
+a = a / 3
+print(a)
