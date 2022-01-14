@@ -6,5 +6,8 @@ def printTests():
     print("another test")
     # added a comment
 
+
 print("hello world")
 printTests()
+a = 4 + 3
+print(a)
