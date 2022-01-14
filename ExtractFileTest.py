@@ -11,3 +11,4 @@ print("hello world")
 printTests()
 a = 4 + 3
 print(a)
+print(9 - 3)
