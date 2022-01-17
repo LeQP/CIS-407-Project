@@ -29,13 +29,10 @@ print(attendence_sheet["Study Groups"])
 print(course_list[0]["Student External ID"])
 
 #   Row
-#print(attendence_sheet.iloc[0] + "\n") # Prepose with the col category followed the row value
-
+print(attendence_sheet.iloc[0]) # Prepose with the col category followed the row value
 print(course_list[0].iloc[0])
 #   List the first n rows with header
 print(attendence_sheet.head(2))
-
-
 #   Access a specific cell (start at 0 and exclude headers) (https://stackoverflow.com/questions/21393489/pandas-how-to-access-cell-in-pandas-equivalent-of-df3-4-in-r)
 print(course_list[0].iloc[0, 0])
 
@@ -61,5 +58,16 @@ for x in get_files:
     print(f"Location: {x}\n")
 
 # Get the file name and CRN for a course
+print("=======================================\n")
 path = os.getcwd()    
 get_files = glob.glob(os.path.join(path, "Course Sheets", "*.xlsx"))
+course = []
+crn = []
+for x in get_files:
+    print(f"x in loop = {x}\n") # Reveal the entire pathway to each excel file
+    class_info = x.split("_")[1].rsplit(" ", 1) #Split based on the underscores(_) first then use rsplit to split class number and CRN
+    course.append(class_info[0])
+    crn.append(class_info[1])
+
+print(f"The course is {course[0]}\nThe course number is {crn[0]}")
+    
