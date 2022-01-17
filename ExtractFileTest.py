@@ -28,6 +28,7 @@ print("\n")
 #   Access a specific cell (start at 0 and exclude headers) (https://stackoverflow.com/questions/21393489/pandas-how-to-access-cell-in-pandas-equivalent-of-df3-4-in-r)
 print(course_list[0].iloc[0, 0])
 print("\n")
+
 #   Get the length of row and cols of a file (count excludes headers)
 len_row = len(attendence_sheet)
 len_col = len(attendence_sheet.columns)
