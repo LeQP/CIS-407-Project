@@ -444,11 +444,3 @@ class rb_tree(object):
                     x = self.root # Set x as the root finish the deletion process
         x.color = "black" # Set x to black at the end of the method
                     
-
-
-
-    
-
-
-    
-    
