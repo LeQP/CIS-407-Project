@@ -62,44 +62,42 @@ class rb_tree(object):
     
     def __print_tree(self, curr_node):
         # Recursively print a subtree (in order), rooted at curr_node
-        # Printed in preorder
+        # Printed in inorder
         if curr_node is not self.sentinel:
-            print(str(curr_node.id), end=' ')  # save space
             self.__print_tree(curr_node.left)
+            print("External Student ID: " + str(curr_node.id))
+            curr_node.student.print_all()
+            print("===========================")
             self.__print_tree(curr_node.right)
+    
+    def print_with_colors(self):
+        # Also prints the IDs of all node but with color indicators
+        self.__print_with_colors(self.root)
 
     def __print_with_colors(self, curr_node):
         # Recursively print a subtree (in order), rooted at curr_node
-        # Printed in PREORDER
+        # Printed in INORDER
         # Extracts the color of the node and print it in the format -idC- where C is B for black and R for red
         if curr_node is not self.sentinel:
-
             if curr_node.color == "red":
                 node_color = "R"
             else:
                 node_color = "B"
-
-            print(str(curr_node.id)+node_color, end=' ')  # save space
+            
             self.__print_with_colors(curr_node.left)
+            print("External Student ID: " + str(curr_node.id))
+            curr_node.student.print_all()
             self.__print_with_colors(curr_node.right)
 
-    def print_with_colors(self):
-        # Also prints the IDs of all node but with color indicators
-        self.__print_with_colors(self.root)
-            
-            
+                   
     def __iter__(self):
         return self.inorder()
-
     def inorder(self):
         return self.__traverse(self.root, rb_tree.INORDER)
-
     def preorder(self):
         return self.__traverse(self.root, rb_tree.PREORDER)
-
     def postorder(self):
         return self.__traverse(self.root, rb_tree.POSTORDER)
-
     def __traverse(self, curr_node, traversal_type):
         if curr_node is not self.sentinel:
             if traversal_type == self.PREORDER:
@@ -110,14 +108,6 @@ class rb_tree(object):
             yield from self.__traverse(curr_node.right, traversal_type)
             if traversal_type == self.POSTORDER:
                 yield curr_node
-
-    # find_min travels across the leftChild of every node, and returns the
-    # node who has no leftChild. This is the min value of a subtree
-    def find_min(self):
-        current_node = self.root
-        while current_node.left:
-            current_node = current_node.left
-        return current_node
     
     # find_node expects a ID and returns the Node object for the given ID
     def find_node(self, id):
@@ -144,22 +134,18 @@ class rb_tree(object):
         else: # ID is greater than current_node.ID
             # recursively call __get with ID and current_node's right
             return self.__get( id, current_node.right )
-    
 
     def find_successor(self, id):
         # Private Method, can only be used inside of BST.
         current_node = self.find_node(id)
-
         if current_node is self.sentinel:
             raise KeyError
-
         # Travel left down the rightmost subtree
         if current_node.right:
             current_node = current_node.right
             while current_node.left is not self.sentinel:
                 current_node = current_node.left
             successor = current_node
-
         # Travel up until the node is a left child
         else:
             parent = current_node.parent
@@ -167,13 +153,12 @@ class rb_tree(object):
                 current_node = parent
                 parent = parent.parent
             successor = parent
-
         if successor:
             return successor
         else:
             return None
 
-    # put adds a node to the tree
+    # Adds a node to the tree
     def insert(self, id):
         # if the tree has a root
         if self.root:
@@ -185,16 +170,6 @@ class rb_tree(object):
             self.root = Node(id, parent = self.sentinel, left = self.sentinel, right = self.sentinel)
             new_node = self.root
             self.__rb_insert_fixup(new_node)
-    
-    # Insertion for Binary Search Tree
-    def bst_insert(self, id):
-        # if the tree has a root
-        if self.root:
-            # use helper method __put to add the new node to the tree
-            self.__put(id, self.root)
-        else: # there is no root
-            # make root a Node with values passed to put
-            self.root = Node(id, parent = self.sentinel, left = self.sentinel, right = self.sentinel)
         
     # helper function __put finds the appropriate place to add a node in the tree
     def __put(self, id, current_node):
@@ -212,36 +187,28 @@ class rb_tree(object):
                 current_node.right = new_node
         return new_node
 
-    
     def delete(self, id):
         # Same as binary tree delete, except we call rb_delete fixup at the end.
-
         z = self.find_node(id)
         if z.left is self.sentinel or z.right is self.sentinel:
             y = z
         else:
             y = self.find_successor(z.id)
-        
         if y.left is not self.sentinel:
             x = y.left
         else:
             x = y.right
-        
         if x is not self.sentinel:
             x.parent = y.parent
-
         if y.parent is self.sentinel:
             self.root = x
-
         else:
             if y == y.parent.left:
                 y.parent.left = x
             else:
                 y.parent.right = x
-        
         if y is not z:
             z.id = y.id
-    
         if y.color == 'black':
             if x is self.sentinel:
                 self.__rb_delete_fixup(y)
