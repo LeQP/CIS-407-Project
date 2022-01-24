@@ -1,5 +1,5 @@
 class Student(object):
-    def __init_(self, first_name, last_name):
+    def __init__(self, first_name, last_name):
         self.first = first_name
         self.last = last_name
         self.crn = []
@@ -32,11 +32,11 @@ class Student(object):
         print(f"Name: {full}\nCRNs: {self.crn}\nClasses: {self.classes}")
         
 class Node(object):
-    def __init__(self, id, first_name = "", last_name = "", left = None, right = None, parent = None, color = 'red'):
+    def __init__(self, id, first = "", last = "", left = None, right = None, parent = None, color = 'red'):
         # Student Information
         self.id = id
-        self.student = Student(first_name, last_name)
-
+        self.student = Student(first, last)
+        
         # Tree Properties
         self.left = left
         self.right = right
@@ -51,10 +51,16 @@ class rb_tree(object):
     # initialize root and size
     def __init__(self):
         self.root = None
-        self.sentinel = Node(None, color = 'black')
+        self.sentinel = Node(None, None, None, color = 'black')
         self.sentinel.parent = self.sentinel
         self.sentinel.left = self.sentinel
         self.sentinel.right = self.sentinel
+
+    def is_empty(self):
+        if self.root == None:
+            return True
+        else:
+            return False
     
     def print_tree(self):
         # Print the IDs of all nodes in order
@@ -116,7 +122,7 @@ class rb_tree(object):
             if desired_id:
                 return desired_id
             else:
-                raise KeyError("KeyError detected: ID not found")
+                return None
         else:
             raise KeyError("KeyError detected: Tree has no root")
 
@@ -159,31 +165,31 @@ class rb_tree(object):
             return None
 
     # Adds a node to the tree
-    def insert(self, id):
+    def insert(self, id, first_name = "", last_name = ""):
         # if the tree has a root
         if self.root:
             # use helper method __put to add the new node to the tree
-            new_node = self.__put(id, self.root)
+            new_node = self.__put(id, first_name, last_name, self.root)
             self.__rb_insert_fixup(new_node)
         else: # there is no root
             # make root a Node with values passed to put
-            self.root = Node(id, parent = self.sentinel, left = self.sentinel, right = self.sentinel)
+            self.root = Node(id, first_name, last_name, parent = self.sentinel, left = self.sentinel, right = self.sentinel)
             new_node = self.root
             self.__rb_insert_fixup(new_node)
         
     # helper function __put finds the appropriate place to add a node in the tree
-    def __put(self, id, current_node):
+    def __put(self, id, first_name, last_name, current_node):
         if id < current_node.id:
             if current_node.left != self.sentinel:
-                new_node = self.__put(id, current_node.left)
+                new_node = self.__put(id, first_name, last_name, current_node.left)
             else: # current_node has no child
-                new_node = Node(id, parent = current_node, left = self.sentinel, right = self.sentinel )
+                new_node = Node(id, first_name, last_name, parent = current_node, left = self.sentinel, right = self.sentinel )
                 current_node.left = new_node
         else: # ID is greater than or equal to current_node's ID
             if current_node.right != self.sentinel:
-                new_node = self.__put(id, current_node.right)
+                new_node = self.__put(id, first_name, last_name, current_node.right)
             else: # current_node has no right child
-                new_node = Node(id, parent = current_node,left = self.sentinel,right = self.sentinel )
+                new_node = Node(id, first_name, last_name, parent = current_node,left = self.sentinel,right = self.sentinel )
                 current_node.right = new_node
         return new_node
 
