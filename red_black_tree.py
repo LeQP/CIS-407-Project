@@ -4,6 +4,7 @@ class Student(object):
         self.last = last_name
         self.crn = []
         self.classes = []
+        self.attended = []
 
     # Setters
     def set_first(self, first_name):
@@ -15,21 +16,21 @@ class Student(object):
     def remove_crn(self, crn):
         self.crn.remove(crn)
     def add_classes(self, classes):
-            self.classes.append(classes)
+        self.classes.append(classes)
     def remove_classes(self, classes):
         self.classes.remove(classes)
+    def add_attended(self, attended):
+        self.attended.append(attended)
+    def remove_attended(self, attended):
+        self.attended.remove(attended)
 
     # Getters
     def get_full_name(self):
         full_name = str(self.first) + " " + str(self.last)
         return full_name
-    def get_crn(self):
-        return self.crn
-    def get_classes(self):
-        return self.classes
     def print_all(self):
         full = self.get_full_name()
-        print(f"Name: {full}\nCRNs: {self.crn}\nClasses: {self.classes}")
+        print(f"Name: {full}\nCRNs: {self.crn}\nClasses: {self.classes}\nAttended: {self.attended}")
         
 class Node(object):
     def __init__(self, id, first = "", last = "", left = None, right = None, parent = None, color = 'red'):
@@ -56,6 +57,21 @@ class rb_tree(object):
         self.sentinel.left = self.sentinel
         self.sentinel.right = self.sentinel
 
+    # def print_specific(self, id  = 0, first  = "", last = ""):
+       # print("==============================")
+        # self.__print_specific(self, id, first, last)
+
+        
+   # def __print_specific(self, curr_node, id, first, last):
+       # if curr_node is not self.sentinel:
+           # self.__print_specific(curr_node.left, id, first, last)
+           # if (curr_node.id == id) or (curr_node.student.first == first and curr_node.student.last == last):
+               # print("External Student ID: " + str(curr_node.id))
+               # curr_node.student.print_all()
+                #print("==============================")
+           # self.__print_specific(curr_node.right, id, first, last)
+
+
     def is_empty(self):
         if self.root == None:
             return True
@@ -64,6 +80,7 @@ class rb_tree(object):
     
     def print_tree(self):
         # Print the IDs of all nodes in order
+        print("==============================")
         self.__print_tree(self.root)
     
     def __print_tree(self, curr_node):
@@ -73,7 +90,7 @@ class rb_tree(object):
             self.__print_tree(curr_node.left)
             print("External Student ID: " + str(curr_node.id))
             curr_node.student.print_all()
-            print("===========================")
+            print("==============================")
             self.__print_tree(curr_node.right)
     
     def print_with_colors(self):
@@ -130,7 +147,6 @@ class rb_tree(object):
     # the given ID
     def __get(self, id, current_node):
         if current_node is self.sentinel: # if current_node does not exist return None
-            print("couldnt find ID: {}".format(id))
             return None
         elif current_node.id == id:
             return current_node
