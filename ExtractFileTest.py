@@ -28,6 +28,7 @@ https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_excel.htm
 """
 
 print("===========================================================================================")
+# Side Note: You will need to change the path for .read_excel() since they are originally based off of my computer
 # Opening an Excel file (You will need to get the path to access a specific file)
 print("Section 1:\n")
 print("Opening an Excel file:")

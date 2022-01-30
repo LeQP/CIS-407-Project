@@ -11,7 +11,6 @@ current_directory = os.getcwd()
 # Collect the file pathways for the attendance sheet and course sheets
 get_files = glob.glob(os.path.join(current_directory, "Attendance Sheet", "*.xlsx"))
 for x in get_files:
-    # file = pd.read_excel(x, dtype={"Attendance Date": str, "Study Groups": str, "Attended": str, "Number of Group Participants": int, "Attended.1": int})
     attendance.append(x)
     
 get_files = glob.glob(os.path.join(current_directory, "Course Sheets", "*.xlsx"))
@@ -20,9 +19,9 @@ for x in get_files:
     database.setdefault(x, course_info)
     courses.append(x)
     
-# Begin extracting first name, last name, and student id and putting it into RB tree
+# Begin extracting first name, last name, and student id of the course sheets and putting it into RB tree
 for x in courses:
-    # Read the file
+    # Reads the file
     file = pd.read_excel(x, dtype={"Student External ID": int, "Student First Name": str, "Student Last Name": str})
     len_row = len(file)
     course_info = database.get(x)
@@ -36,8 +35,22 @@ for x in courses:
         curr_node.student.add_classes(course_info[0])
         curr_node.student.add_crn(course_info[1])
 
+for x in attendance:
+    file = pd.read_excel(x, dtype={"Attendance Date": str, "Study Groups": str, "Attended": str, "Number of Group Participants": int, "Attended.1": int})
+    len_row = len(file)
+    for i in range(0, len_row):
+        names = file.iloc[i, 2].split("\n ")
+        for j in names:
+            name = j.split(", ")
+            curr_node = tree.find_name(name[1], name[0])
+            if curr_node != None:
+                attended = [file.iloc[i, 1], file.iloc[i, 0]]
+                curr_node.student.add_attendance(attended)
+        
+# Both of these code work
 tree.print_tree()
-tree.print_specific()
+# tree.print_specific(first = "Gaston", last = "Vaughan")
     
+
 
         

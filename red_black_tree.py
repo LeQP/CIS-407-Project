@@ -57,20 +57,36 @@ class rb_tree(object):
         self.sentinel.left = self.sentinel
         self.sentinel.right = self.sentinel
 
-    # def print_specific(self, id  = 0, first  = "", last = ""):
-       # print("==============================")
-        # self.__print_specific(self, id, first, last)
+    def print_specific(self, id  = 0, first  = "", last = ""):
+       print("==============================")
+       self.__print_specific(self.root, id, first, last)
 
         
-   # def __print_specific(self, curr_node, id, first, last):
-       # if curr_node is not self.sentinel:
-           # self.__print_specific(curr_node.left, id, first, last)
-           # if (curr_node.id == id) or (curr_node.student.first == first and curr_node.student.last == last):
-               # print("External Student ID: " + str(curr_node.id))
-               # curr_node.student.print_all()
-                #print("==============================")
-           # self.__print_specific(curr_node.right, id, first, last)
+    def __print_specific(self, curr_node, id, first, last):
+       if curr_node is not self.sentinel:
+            self.__print_specific(curr_node.left, id, first, last)
+            if (curr_node.id == id) or (curr_node.student.first == first) or (curr_node.student.last == last):
+               print("External Student ID: " + str(curr_node.id))
+               curr_node.student.print_all()
+               print("==============================")
+            self.__print_specific(curr_node.right, id, first, last)
 
+    def find_name(self, first, last):
+        if self.root:
+            result = self.__find_name(first, last, self.root)
+            if result != None:
+               return result
+            else:
+                return None
+        else:
+            raise KeyError("KeyError detected: Tree has no root")
+
+    def __find_name(self, first, last, curr_node):
+        if curr_node is not self.sentinel:
+            self.__find_name(first, last, curr_node.left)
+            if (curr_node.student.first == first) and (curr_node.student.last == last):
+                return curr_node
+            self.__find_name(first, last, curr_node.right)
 
     def is_empty(self):
         if self.root == None:
