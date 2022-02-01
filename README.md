@@ -1,4 +1,4 @@
-# [Tracking Class Encore Attendance]
+# Tracking Class Encore Attendance
 By Joey Le, Angela Pelky, and Sarah Gorton
 ## Description
   This project is about integrating data from Class Encore, a tutoring program at the University of Oregon, and being able to represent it in various forms.
