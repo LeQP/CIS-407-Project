@@ -1,9 +1,11 @@
 """
+Written by Joey Le
 Description:
 ------------
 This file is designed for referencing and understanding how to apply Microsoft Excel files into Python Code
+I wrote this to help teach myself how to use the neccessary tools for the project
 This program was made very informally and should be removed by the end of the project from GitHub
-Feel free to comment out or in certain sections to focus on a particular one
+Feel free to comment out or in certain lines to focus on a particular one
 """
 
 """
