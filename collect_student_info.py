@@ -2,7 +2,7 @@ from red_black_tree import Student, Node, rb_tree
 import pandas as pd
 import os
 import glob
-# hello
+
 tree = rb_tree()
 attendance = []
 courses = []
