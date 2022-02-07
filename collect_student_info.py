@@ -14,10 +14,12 @@ current_directory = os.getcwd()
 get_files = glob.glob(os.path.join(current_directory, "Attendance Sheet", "*.xlsx"))
 for x in get_files:
     attendance.append(x)
-    
+
 get_files = glob.glob(os.path.join(current_directory, "Course Sheets", "*.xlsx"))
+# x contains the specific excel file and its pathway
 for x in get_files:
-    course_info = x.rsplit(" ", 1)
+    course_info = x.rsplit("\\", 1)[1].rsplit(" ", 1)
+    course_info[1] = course_info[1][0:5]
     database.setdefault(x, course_info)
     classCRN.setdefault(course_info[1], course_info[0])
     courses.append(x)
