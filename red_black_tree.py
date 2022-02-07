@@ -4,7 +4,7 @@ class Student(object):
         self.last = last_name
         self.crn = []
         self.classes = []
-        self.attended = []
+        self.attended = 0
 
     # Setters
     def set_first(self, first_name):
@@ -19,10 +19,10 @@ class Student(object):
         self.classes.append(classes)
     def remove_classes(self, classes):
         self.classes.remove(classes)
-    def add_attended(self, attended):
-        self.attended.append(attended)
-    def remove_attended(self, attended):
-        self.attended.remove(attended)
+    def add_attended(self):
+        self.attended = self.attended + 1
+    def subtract_attended(self):
+        self.attended = self.attended - 1
 
     # Getters
     def get_full_name(self):

@@ -7,6 +7,8 @@ tree = rb_tree()
 attendance = []
 courses = []
 database = {}
+classCRN = {}
+
 current_directory = os.getcwd()
 # Collect the file pathways for the attendance sheet and course sheets
 get_files = glob.glob(os.path.join(current_directory, "Attendance Sheet", "*.xlsx"))
@@ -15,8 +17,9 @@ for x in get_files:
     
 get_files = glob.glob(os.path.join(current_directory, "Course Sheets", "*.xlsx"))
 for x in get_files:
-    course_info = x.split("_")[1].rsplit(" ", 1)
+    course_info = x.rsplit(" ", 1)
     database.setdefault(x, course_info)
+    classCRN.setdefault(course_info[1], course_info[0])
     courses.append(x)
     
 # Begin extracting first name, last name, and student id of the course sheets and putting it into RB tree
@@ -45,7 +48,7 @@ for x in attendance:
             curr_node = tree.find_name(name[1], name[0])
             if curr_node != None:
                 attended = [file.iloc[i, 1], file.iloc[i, 0]]
-                curr_node.student.add_attendance(attended)
+                curr_node.student.add_attendance()
         
 # Both of these code work
 tree.print_tree()
