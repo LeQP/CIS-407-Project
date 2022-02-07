@@ -65,7 +65,7 @@ class rb_tree(object):
     def __print_specific(self, curr_node, id, first, last):
        if curr_node is not self.sentinel:
             self.__print_specific(curr_node.left, id, first, last)
-            if (curr_node.id == id) or (curr_node.student.first == first) or (curr_node.student.last == last):
+            if (curr_node.id == id) or (curr_node.student.first == first and curr_node.student.last == last):
                print("External Student ID: " + str(curr_node.id))
                curr_node.student.print_all()
                print("==============================")
@@ -75,18 +75,26 @@ class rb_tree(object):
         if self.root:
             result = self.__find_name(first, last, self.root)
             if result != None:
-               return result
+                return result
             else:
                 return None
         else:
             raise KeyError("KeyError detected: Tree has no root")
 
     def __find_name(self, first, last, curr_node):
-        if curr_node is not self.sentinel:
-            self.__find_name(first, last, curr_node.left)
-            if (curr_node.student.first == first) and (curr_node.student.last == last):
-                return curr_node
-            self.__find_name(first, last, curr_node.right)
+        if curr_node is self.sentinel:
+            return None
+        elif (curr_node.student.first == first) and (curr_node.student.last == last):
+            return curr_node
+        else:
+            result1 = self.__find_name(first, last, curr_node.left)
+            result2 = self.__find_name(first, last, curr_node.right)
+            if result1 != None:
+                return result1
+            elif result2 != None:
+                return result2
+            else:
+                return None
 
     def is_empty(self):
         if self.root == None:

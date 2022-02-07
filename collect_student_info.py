@@ -46,11 +46,15 @@ for x in attendance:
     for i in range(0, len_row):
         names = file.iloc[i, 2].split("\n ")
         for j in names:
+            if j[0] == " ":
+                j = j[1:len(j)]
             name = j.split(", ")
+            
             curr_node = tree.find_name(name[1], name[0])
             if curr_node != None:
-                attended = [file.iloc[i, 1], file.iloc[i, 0]]
-                curr_node.student.add_attendance()
+                curr_node.student.add_attended()
+                
+            
         
 # Both of these code work
 tree.print_tree()
