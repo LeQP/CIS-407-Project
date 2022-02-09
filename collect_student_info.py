@@ -10,6 +10,7 @@ database = {}
 classCRN = {}
 
 current_directory = os.getcwd()
+print(current_directory)
 # Collect the file pathways for the attendance sheet and course sheets
 get_files = glob.glob(os.path.join(current_directory, "Attendance Sheet", "*.xlsx"))
 for x in get_files:
@@ -57,7 +58,7 @@ for x in attendance:
             
         
 # Both of these code work
-tree.print_tree()
+# tree.print_tree()
 # tree.print_specific(first = "Gaston", last = "Vaughan")
     
 
