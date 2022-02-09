@@ -11,12 +11,14 @@ classCRN = {}
 
 current_directory = os.getcwd()
 print(current_directory)
+
 # Collect the file pathways for the attendance sheet and course sheets
 get_files = glob.glob(os.path.join(current_directory, "Attendance Sheet", "*.xlsx"))
 for x in get_files:
     attendance.append(x)
 
 get_files = glob.glob(os.path.join(current_directory, "Course Sheets", "*.xlsx"))
+
 # x contains the specific excel file and its pathway
 for x in get_files:
     course_info = x.rsplit("\\", 1)[1].rsplit(" ", 1)
@@ -54,12 +56,11 @@ for x in attendance:
             curr_node = tree.find_name(name[1], name[0])
             if curr_node != None:
                 curr_node.student.add_attended()
-                
             
-        
-# Both of these code work
 # tree.print_tree()
-# tree.print_specific(first = "Gaston", last = "Vaughan")
+tree.print_specific(first="Gaston", last="Bowers")
+tree.print_specific(id=951718481)
+
     
 
 

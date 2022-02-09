@@ -58,14 +58,17 @@ class rb_tree(object):
         self.sentinel.right = self.sentinel
 
     def print_specific(self, id  = 0, first  = "", last = ""):
-       print("==============================")
-       self.__print_specific(self.root, id, first, last)
+        if self.is_empty() == False:
+            print("==============================")
+            self.__print_specific(self.root, id, first, last)
+        else:
+            raise KeyError("KeyError detected: Tree has no information stored")
 
         
     def __print_specific(self, curr_node, id, first, last):
        if curr_node is not self.sentinel:
             self.__print_specific(curr_node.left, id, first, last)
-            if (curr_node.id == id) or (curr_node.student.first == first and curr_node.student.last == last):
+            if (curr_node.id == id and first == "" and last == "") or (id == 0 and curr_node.student.first == first and curr_node.student.last == last):
                print("External Student ID: " + str(curr_node.id))
                curr_node.student.print_all()
                print("==============================")
@@ -104,8 +107,11 @@ class rb_tree(object):
     
     def print_tree(self):
         # Print the IDs of all nodes in order
-        print("==============================")
-        self.__print_tree(self.root)
+        if self.is_empty() == False:
+            print("==============================")
+            self.__print_tree(self.root)
+        else:
+            raise KeyError("KeyError detected: Tree has no information stored")
     
     def __print_tree(self, curr_node):
         # Recursively print a subtree (in order), rooted at curr_node
