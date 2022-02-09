@@ -1,3 +1,19 @@
+"""
+red_black_tree: A program that contains the red-black tree data structure to store nodes
+based on two colors: red and black. This is based on code Joey Le has worked on for CIS 313 
+and has been modified to the context of collect_student_info.
+
+Rationale: Each student contains a significant amount of information needed to be stored. While
+it is possible to contain all that information in a list and store that list in a list full of lists,
+a red_black_tree allows a more simplier representation of the information that gets stored by using nodes.
+Another advantage is that searching for a node based on a student's 95-number through find_node() can
+allow a O(log n) search, faster than doing a O(n) search for a list containing student information under one item. 
+
+"""
+
+
+# Student: a class used as a storage unit for a student's information: first name, last name, 
+# CRNs, class names, and amount of Class Encore sessions attended.
 class Student(object):
     def __init__(self, first_name, last_name):
         self.first = first_name
@@ -6,7 +22,7 @@ class Student(object):
         self.classes = []
         self.attended = 0
 
-    # Setters
+    # Setters - alter a specic attribute if needed
     def set_first(self, first_name):
         self.first = first_name
     def set_last(self, last_name):
@@ -24,14 +40,16 @@ class Student(object):
     def subtract_attended(self):
         self.attended = self.attended - 1
 
-    # Getters
+    # Getters - retrieve or print student infromation
     def get_full_name(self):
         full_name = str(self.first) + " " + str(self.last)
         return full_name
     def print_all(self):
         full = self.get_full_name()
         print(f"Name: {full}\nCRNs: {self.crn}\nClasses: {self.classes}\nAttended: {self.attended}")
-        
+
+# Node: a class used to store in the red-black tree and is identifiable by a student's 95-number
+# Input: a student's first name and a student's last name
 class Node(object):
     def __init__(self, id, first = "", last = "", left = None, right = None, parent = None, color = 'red'):
         # Student Information
@@ -44,12 +62,13 @@ class Node(object):
         self.parent = parent
         self.color = color
 
-
+# rb_tree: a class that represents the red-black tree data structure
 class rb_tree(object):
+    # Attributes for a specific print order
     PREORDER = 1
     INORDER = 2
     POSTORDER = 3
-    # initialize root and size
+    # Initialize root and sentinel
     def __init__(self):
         self.root = None
         self.sentinel = Node(None, None, None, color = 'black')
@@ -57,23 +76,33 @@ class rb_tree(object):
         self.sentinel.left = self.sentinel
         self.sentinel.right = self.sentinel
 
+    # Print a specific student's information
+    # Input: a student's 95-number or their first and last name but not both 95-number and name
+    # Errors: KeyError - when attempting to print from an empty tree
     def print_specific(self, id  = 0, first  = "", last = ""):
+        # Check if the tree is empty first
         if self.is_empty() == False:
             print("==============================")
             self.__print_specific(self.root, id, first, last)
         else:
             raise KeyError("KeyError detected: Tree has no information stored")
 
-        
+    # Helper function for print_specific; uses recursion to iterate through the whole tree through inorder traversal
+    # Input: the tree's root to start, and a student's 95-number or their first and last name but not both 95-number and name
     def __print_specific(self, curr_node, id, first, last):
        if curr_node is not self.sentinel:
             self.__print_specific(curr_node.left, id, first, last)
+            # Check a node's student information to determine if it should print
             if (curr_node.id == id and first == "" and last == "") or (id == 0 and curr_node.student.first == first and curr_node.student.last == last):
                print("External Student ID: " + str(curr_node.id))
                curr_node.student.print_all()
                print("==============================")
             self.__print_specific(curr_node.right, id, first, last)
 
+
+    # Returns a node containing a specific student's information by searching based on a name
+    # Input: a student's first and last name
+    # Errors: KeyError - when attempting to find a name for an empty tree
     def find_name(self, first, last):
         if self.root:
             result = self.__find_name(first, last, self.root)
@@ -84,11 +113,16 @@ class rb_tree(object):
         else:
             raise KeyError("KeyError detected: Tree has no root")
 
+    # Helper function for find_name
+    # Input: a student's first and last name and the tree's root in order to start
     def __find_name(self, first, last, curr_node):
+        # When the leaves are reached, return None
         if curr_node is self.sentinel:
             return None
+        # When the node with the desired name is found, return the node
         elif (curr_node.student.first == first) and (curr_node.student.last == last):
             return curr_node
+        # Otherwise, recurse through the left and then right child of the current node to try to find desired student
         else:
             result1 = self.__find_name(first, last, curr_node.left)
             result2 = self.__find_name(first, last, curr_node.right)
@@ -99,23 +133,26 @@ class rb_tree(object):
             else:
                 return None
 
+    # Check if the tree is empty
     def is_empty(self):
         if self.root == None:
             return True
         else:
             return False
     
+    # Prints all students and their information through recursion
+    # Errors: KeyError - when attempting to print from an empty tree
     def print_tree(self):
-        # Print the IDs of all nodes in order
+        # Print the IDs of all nodes by inorder traversal
         if self.is_empty() == False:
             print("==============================")
             self.__print_tree(self.root)
         else:
             raise KeyError("KeyError detected: Tree has no information stored")
     
+    # Helper function for print_tree() to print with inorder
+    # Input: the current node
     def __print_tree(self, curr_node):
-        # Recursively print a subtree (in order), rooted at curr_node
-        # Printed in inorder
         if curr_node is not self.sentinel:
             self.__print_tree(curr_node.left)
             print("External Student ID: " + str(curr_node.id))
@@ -123,15 +160,16 @@ class rb_tree(object):
             print("==============================")
             self.__print_tree(curr_node.right)
     
+    # Print all student 95-numbers with their node's color through inorder
     def print_with_colors(self):
-        # Also prints the IDs of all node but with color indicators
         self.__print_with_colors(self.root)
 
+    # Helper function for print_with_colors
+    # Input: The current node to print
     def __print_with_colors(self, curr_node):
-        # Recursively print a subtree (in order), rooted at curr_node
-        # Printed in INORDER
         # Extracts the color of the node and print it in the format -idC- where C is B for black and R for red
         if curr_node is not self.sentinel:
+            # Find the color of the node first
             if curr_node.color == "red":
                 node_color = "R"
             else:
@@ -139,10 +177,9 @@ class rb_tree(object):
             
             self.__print_with_colors(curr_node.left)
             print("External Student ID: " + str(curr_node.id))
-            curr_node.student.print_all()
             self.__print_with_colors(curr_node.right)
 
-                   
+    # various
     def __iter__(self):
         return self.inorder()
     def inorder(self):
@@ -162,7 +199,9 @@ class rb_tree(object):
             if traversal_type == self.POSTORDER:
                 yield curr_node
     
-    # find_node expects a ID and returns the Node object for the given ID
+    # Find and return a node based a 95-number
+    # Input: a student's 95 number ID and 
+    # Errors: KeyError - when attempting to p-rint from an empty tree
     def find_node(self, id):
         if self.root:
             desired_id = self.__get(id, self.root)
@@ -173,25 +212,30 @@ class rb_tree(object):
         else:
             raise KeyError("KeyError detected: Tree has no root")
 
-    # helper function __get receives a data and a node. Returns the node with
-    # the given ID
+    # Helper function for find_node to return the node and student information associated with the given ID
+    # Input: A Student's 95-number to search for and the current node to check
     def __get(self, id, current_node):
-        if current_node is self.sentinel: # if current_node does not exist return None
+        # if current_node does not exist return None
+        if current_node is self.sentinel: 
             return None
         elif current_node.id == id:
             return current_node
+        # recursively call __get with ID and current_node's left
         elif id < current_node.id:
-            # recursively call __get with ID and current_node's left
-            return self.__get( id, current_node.left )
+            return self.__get( id, current_node.left)
+        # recursively call __get with ID and current_node's right
         else: # ID is greater than current_node.ID
-            # recursively call __get with ID and current_node's right
             return self.__get( id, current_node.right )
 
+    # Function to find a node's successor (based on 95-number)
+    # input: a student's 95-number
+    # Errors: KeyError - trying to find an id's successor when the id does not exist
+
     def find_successor(self, id):
-        # Private Method, can only be used inside of BST.
+        # Start by finding the node with the id number
         current_node = self.find_node(id)
         if current_node is self.sentinel:
-            raise KeyError
+            raise KeyError("KeyError: node not found")
         # Travel left down the rightmost subtree
         if current_node.right:
             current_node = current_node.right
@@ -214,7 +258,7 @@ class rb_tree(object):
     def insert(self, id, first_name = "", last_name = ""):
         # if the tree has a root
         if self.root:
-            # use helper method __put to add the new node to the tree
+            # use helper method to add the new node to the tree
             new_node = self.__put(id, first_name, last_name, self.root)
             self.__rb_insert_fixup(new_node)
         else: # there is no root
@@ -240,7 +284,7 @@ class rb_tree(object):
         return new_node
 
     def delete(self, id):
-        # Same as binary tree delete, except we call rb_delete fixup at the end.
+        
         z = self.find_node(id)
         if z.left is self.sentinel or z.right is self.sentinel:
             y = z
