@@ -4,6 +4,7 @@ regarding Class Encore attendance and specific class rosters, including the clas
 information collected gets stored in a red-black tree to access later on.
 
 """
+# Side Note: Program will not work correctly if any of the Excel files are opened on the computer
 # Import statements to use a red-black tree and modules for accessing Excel files.
 from red_black_tree import Student, Node, rb_tree
 import pandas as pd
@@ -26,6 +27,7 @@ for x in get_files:
 
 # Collect the file pathways for the course sheets
 # x contains the specific excel file and its pathway
+
 get_files = glob.glob(os.path.join(current_directory, "Course Sheets", "*.xlsx"))
 for x in get_files:
     # Remove all the extra characters from the pathway to leave only the class name and CRN
@@ -81,9 +83,9 @@ for x in attendance:
 
 # Different ways to print the tree (the entire tree or a specific name or 95-number)       
   
-# tree.print_tree()
-tree.print_specific(first="Gaston", last="Bowers")
-tree.print_specific(id=951718481)
+tree.print_tree()
+# tree.print_specific(first="Gaston", last="Bowers")
+# tree.print_specific(id=951718481)
 
     
 

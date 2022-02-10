@@ -1,7 +1,8 @@
 """
 red_black_tree: A program that contains the red-black tree data structure to store nodes
 based on two colors: red and black. This is based on code Joey Le has worked on for CIS 313 
-and has been modified to the context of collect_student_info.
+and has been modified to the context of collect_student_info. Additions include finding a specific
+node by name 
 
 Rationale: Each student contains a significant amount of information needed to be stored. While
 it is possible to contain all that information in a list and store that list in a list full of lists,
@@ -9,11 +10,17 @@ a red_black_tree allows a more simplier representation of the information that g
 Another advantage is that searching for a node based on a student's 95-number through find_node() can
 allow a O(log n) search, faster than doing a O(n) search for a list containing student information under one item. 
 
+Credit: Daniel Lowd and Cody Rucker, a professor and teaching assistance respectively, supplied 
+code for inserting, deleting, and printing basic nodes and finding a node and its sucessor within 
+this program after students have demonstrated and applied an understanding of those concepts in a 
+binary search tree. All the red-black tree charateristics were done by Joey.
 """
 
 
-# Student: a class used as a storage unit for a student's information: first name, last name, 
-# CRNs, class names, and amount of Class Encore sessions attended.
+"""
+Student: a class used as a storage unit for a student's information: first name, last name, 
+CRNs, class names, and amount of Class Encore sessions attended.
+"""
 class Student(object):
     def __init__(self, first_name, last_name):
         self.first = first_name
@@ -48,8 +55,10 @@ class Student(object):
         full = self.get_full_name()
         print(f"Name: {full}\nCRNs: {self.crn}\nClasses: {self.classes}\nAttended: {self.attended}")
 
-# Node: a class used to store in the red-black tree and is identifiable by a student's 95-number
-# Input: a student's first name and a student's last name
+"""
+Node: a class used to store in the red-black tree and is identifiable by a student's 95-number
+Input: a student's first name and a student's last name
+"""
 class Node(object):
     def __init__(self, id, first = "", last = "", left = None, right = None, parent = None, color = 'red'):
         # Student Information
@@ -62,7 +71,9 @@ class Node(object):
         self.parent = parent
         self.color = color
 
-# rb_tree: a class that represents the red-black tree data structure
+"""
+rb_tree: a class that represents the red-black tree data structure
+"""
 class rb_tree(object):
     # Attributes for a specific print order
     PREORDER = 1
@@ -178,26 +189,6 @@ class rb_tree(object):
             self.__print_with_colors(curr_node.left)
             print("External Student ID: " + str(curr_node.id))
             self.__print_with_colors(curr_node.right)
-
-    # various
-    def __iter__(self):
-        return self.inorder()
-    def inorder(self):
-        return self.__traverse(self.root, rb_tree.INORDER)
-    def preorder(self):
-        return self.__traverse(self.root, rb_tree.PREORDER)
-    def postorder(self):
-        return self.__traverse(self.root, rb_tree.POSTORDER)
-    def __traverse(self, curr_node, traversal_type):
-        if curr_node is not self.sentinel:
-            if traversal_type == self.PREORDER:
-                yield curr_node
-            yield from self.__traverse(curr_node.left, traversal_type)
-            if traversal_type == self.INORDER:
-                yield curr_node
-            yield from self.__traverse(curr_node.right, traversal_type)
-            if traversal_type == self.POSTORDER:
-                yield curr_node
     
     # Find and return a node based a 95-number
     # Input: a student's 95 number ID and 
@@ -228,9 +219,8 @@ class rb_tree(object):
             return self.__get( id, current_node.right )
 
     # Function to find a node's successor (based on 95-number)
-    # input: a student's 95-number
+    # Input: a student's 95-number
     # Errors: KeyError - trying to find an id's successor when the id does not exist
-
     def find_successor(self, id):
         # Start by finding the node with the id number
         current_node = self.find_node(id)
@@ -255,8 +245,9 @@ class rb_tree(object):
             return None
 
     # Adds a node to the tree
+    # Input: A student's 95-number and their first and last name
     def insert(self, id, first_name = "", last_name = ""):
-        # if the tree has a root
+        # Check if the tree has a root
         if self.root:
             # use helper method to add the new node to the tree
             new_node = self.__put(id, first_name, last_name, self.root)
@@ -267,81 +258,79 @@ class rb_tree(object):
             new_node = self.root
             self.__rb_insert_fixup(new_node)
         
-    # helper function __put finds the appropriate place to add a node in the tree
+    # Helper function for insert() to find a place to add a node in the tree
+    # Input: A student's 95-number, their first and last name, and the current node to compare the 95-number to
     def __put(self, id, first_name, last_name, current_node):
+        # If the id is less than the node, go down the left child if its there
         if id < current_node.id:
             if current_node.left != self.sentinel:
                 new_node = self.__put(id, first_name, last_name, current_node.left)
-            else: # current_node has no child
+            else: # current_node has no child, so insert node as a left child
                 new_node = Node(id, first_name, last_name, parent = current_node, left = self.sentinel, right = self.sentinel )
                 current_node.left = new_node
-        else: # ID is greater than or equal to current_node's ID
+        else: # If the id is greater than or equal to current_node's id, then go down the right child if tis there
             if current_node.right != self.sentinel:
                 new_node = self.__put(id, first_name, last_name, current_node.right)
-            else: # current_node has no right child
+            else: # current_node has no right child, so insert node as a right child
                 new_node = Node(id, first_name, last_name, parent = current_node,left = self.sentinel,right = self.sentinel )
                 current_node.right = new_node
         return new_node
 
+    # Delete a node from the tree
+    # Input: the 95-number associated with the node
     def delete(self, id):
-        
+        # Find the node z to delete
         z = self.find_node(id)
+        # determine what will replace the node z, use y to reference the node that will fill z's place 
         if z.left is self.sentinel or z.right is self.sentinel:
             y = z
         else:
             y = self.find_successor(z.id)
+
+        # Adjust the child and parents of y for y to be positioned at z, 
+        # use x to reference the affected nodes around y   
         if y.left is not self.sentinel:
             x = y.left
         else:
             x = y.right
+        
         if x is not self.sentinel:
             x.parent = y.parent
         if y.parent is self.sentinel:
             self.root = x
-        else:
+        else: # y is not the root, so get y's placement removed from the tree
             if y == y.parent.left:
                 y.parent.left = x
             else:
                 y.parent.right = x
+        # Replace z's value with the new value        
         if y is not z:
             z.id = y.id
+            z.student = y.student
+        # Perform the helper function to restore the red-black property after deletion
         if y.color == 'black':
             if x is self.sentinel:
                 self.__rb_delete_fixup(y)
             else:
                 self.__rb_delete_fixup(x)
 
+    # Peforms a left rotation on a node and its right child
+    # Input: The root node of a subtree that will be rotated alongside its right child
+    # Errors: KeyError - by trying to rotate a NULL or sentinel node or rotate within an empty tree
     def left_rotate(self, current_node):
-        """
-        Peforms a left rotation on a node and its right child
-
-        Parameters:
-        -----------
-        current_node : Node
-            The root node of a subtree that will be rotated alongside its right child
-
-        Raises:
-        -------
-        KeyError
-            Occurs by trying to rotate a NULL or sentinel node
-
-        """
-
         x = current_node                # Define x as the root of the subtree
         try:                            # Check for current node and if tree is empty to see if rotation is possible
             if self.root == self.sentinel or self.root == None or x == self.sentinel or x == None:  
                 raise KeyError
         except KeyError:
-            print("KeyError detected: Can't do a left rotation with node or its right child")
-            raise KeyError
+            raise KeyError("KeyError detected: Can't do a left rotation with node or its right child")
 
         y = x.right                     # Define y as the right child to rotate with x
         try:                            # Check for node and child to see if rotation is possible
             if y == self.sentinel or y == None:  
                 raise KeyError
         except KeyError:
-            print("KeyError detected: Can't do a left rotation with node or its right child")
-            raise KeyError
+            raise KeyError("KeyError detected: Can't do a left rotation with node or its right child")
 
         x.right = y.left                # Set y's left subtree as x's right subtree
         if y.left != self.sentinel:     # Adjust parent if the left subtree is not NULL
@@ -358,21 +347,10 @@ class rb_tree(object):
         y.left = x;                     # Complete the swap and adjustments between x and y by making x the left child of y and y as the parent
         x.parent = y
     
+    # Peform a right rotation on a node and its left child
+    # Input: The root node of a subtree that will be rotated alongside its left child
+    # Errors: KeyError - by trying to rotate along with a NULL or sentinel or rotate within an empty tree
     def right_rotate(self, current_node):
-        """
-        Peforms a right rotation on a node and its left child
-
-        Parameters:
-        -----------
-        current_node : Node
-            The root node of a subtree that will be rotated alongside its left child
-
-        Raises:
-        -------
-        KeyError
-            Occurs by trying to rotate along with a NULL or sentinel
-
-        """
         y = current_node                # Define y as the root of the subtree
         try:                            # Check for current node and if tree is empty to see if rotation is possible
             if self.root == self.sentinel or self.root == None or y == self.sentinel or y == None:  
@@ -403,22 +381,12 @@ class rb_tree(object):
 
         x.right = y;                    # Complete the rotation and adjustments between y and x by making y the right child of x and x as the parent
         y.parent = x
-    
-    def __rb_insert_fixup(self, z):
-        """
-        Helper function maintains the balancing and coloring property after insertion into a red-black tree
 
-        Parameters:
-        -----------
-        z : Node
-            A value to reference a specific node and its parent; starts at the newly inserted node and later moves up the tree,
-        
-        Raises:
-        -------
-        KeyError
-            Occurs by trying to rotate along with a NULL or sentinel child using left_rotate() or right_rotate()
-        """
-        
+
+    # Helper function that maintains the balancing and coloring property after insertion into a red-black tree
+    # Input:  A value to reference a specific node and its parent; starts at the newly inserted node and later moves up the tree 
+    # Errors: KeyErrors - by trying to rotate along with a NULL or sentinel child using left_rotate() or right_rotate()
+    def __rb_insert_fixup(self, z):
         # Use a while-loop to keep moving up the tree to check for consecutive reds and stop once reds are no longer consecutive
         # z is assumed red, so check for the parent's color
         while z.parent.color == "red":
@@ -455,20 +423,11 @@ class rb_tree(object):
         self.root.color = "black"                   # Manually make the root black to maintain black root color at the end of the fixup
 
 
+
+    # Helper function that maintains the balancing and coloring property after deletion 
+    # Input: a node that represents the node once it gets deleted
+    # Errors: KeyError - by trying to rotate along with a NULL or sentinel child using left_rotate() or right_rotate()
     def __rb_delete_fixup(self, x):
-        """ 
-        Helper function that maintains the balancing and coloring property after bst deletion 
-
-        Parameters:
-        -----------
-        x : Node
-            x initially represents the node once that gets deleted
-
-        Raises:
-        -------
-        KeyError
-            Occurs by trying to rotate along with a NULL or sentinel child using left_rotate() or right_rotate()
-        """
         # Use a while-loop to check if x is a red, since that can be easily done by changing red to black, and if there are still elements in the tree after deletion
         # Iterate through loop until x is red
         while x != self.root and x.color == "black":
