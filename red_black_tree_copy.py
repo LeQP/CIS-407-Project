@@ -1,6 +1,6 @@
 class Student(object):
     def __init__(self, name):
-        self.name
+        self.name = name
         self.crn = []
         self.classes = []
         self.attended = 0
@@ -45,7 +45,7 @@ class rb_tree(object):
     # initialize root and size
     def __init__(self):
         self.root = None
-        self.sentinel = Node(None, None, None, color = 'black')
+        self.sentinel = Node(None, None, color = 'black')
         self.sentinel.parent = self.sentinel
         self.sentinel.left = self.sentinel
         self.sentinel.right = self.sentinel

@@ -8,7 +8,7 @@ red black tree.
 
 import csv
 import bcrypt
-from red_black_tree import Student, Node, rb_tree
+from red_black_tree_copy import Student, Node, rb_tree
 import os
 import glob
 
@@ -20,7 +20,7 @@ classCRN = {}
 name_id = {}
 
 # open the attendence sheet
-with open('names.csv', 'r') as names_csv:
+with open('Attendance Sheet/Example Attendance Sheet.csv', 'r') as names_csv:
     csv_rder = csv.reader(names_csv)
     
     # each row is a list of names
