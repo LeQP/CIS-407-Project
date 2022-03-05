@@ -84,8 +84,8 @@ for x in attendance:
 # Different ways to print the tree (the entire tree or a specific name or 95-number)       
   
 tree.print_tree()
-# tree.print_specific(first="Gaston", last="Bowers")
-# tree.print_specific(id=951718481)
+tree.print_specific(first="Gaston", last="Bowers")
+tree.print_specific(id=951718481)
 
     
 
